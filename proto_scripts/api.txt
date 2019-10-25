@@ -1,0 +1,30 @@
+# 格式说明=
+# 格式说明=
+# 客户端请求名_req结束.
+# 服务端回复包_ack结束.
+# 服务端通知包_notify结束.
+
+packet_type:2000
+name:heart_beat_req
+payload:auto_id
+desc:心跳包..
+
+packet_type:2001
+name:heart_beat_ack
+payload:auto_id
+desc:心跳包回复
+
+packet_type:2002
+name:user_login_req
+payload:user_login_info
+desc:登陆
+
+packet_type:2003
+name:user_login_succeed_ack
+payload:user_snapshot
+desc:登陆成功
+
+packet_type:2004
+name:user_login_faild_ack
+payload:error_info
+desc:登陆失败

@@ -1,0 +1,21 @@
+#公共结构， 用于只传id,或一个数字的结构
+null_struct=
+===
+
+byte_id=
+id uint8
+===
+
+auto_id=
+id integer
+===
+
+#通用实体ID
+entity_id=
+id uint64
+===
+
+#通用物品id或物品模板id
+item_id=
+id uint32
+===
