@@ -19,3 +19,9 @@ id uint64
 item_id=
 id uint32
 ===
+
+player_cards=
+player_1 array uint16
+player_2 array uint16
+plyaer_3 array uint16
+===

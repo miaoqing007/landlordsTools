@@ -3,17 +3,15 @@
 package main
 
 var Code = map[string]int16{
-	"heart_beat_req":         2000, // 心跳包..
-	"heart_beat_ack":         2001, // 心跳包回复
-	"user_login_req":         2002, // 登陆
-	"user_login_succeed_ack": 2003, // 登陆成功
-	"user_login_faild_ack":   2004, // 登陆失败
+	"heart_beat_req":     2000, // 心跳包
+	"user_login_req":     2001, // 登陆
+	"error_ack":          2002, // 错误返回
+	"licensing_card_req": 2003, // 发牌请求
 }
 
 var RCode = map[int16]string{
-	2000: "heart_beat_req",         // 心跳包..
-	2001: "heart_beat_ack",         // 心跳包回复
-	2002: "user_login_req",         // 登陆
-	2003: "user_login_succeed_ack", // 登陆成功
-	2004: "user_login_faild_ack",   // 登陆失败
+	2000: "heart_beat_req",     // 心跳包
+	2001: "user_login_req",     // 登陆
+	2002: "error_ack",          // 错误返回
+	2003: "licensing_card_req", // 发牌请求
 }

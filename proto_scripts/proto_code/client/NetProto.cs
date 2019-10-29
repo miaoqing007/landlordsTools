@@ -98,4 +98,67 @@ namespace NetProto.Proto
             return tbl;
         }
     }
+
+    public class player_cards : NetBase
+    { 
+        public UInt16[] player_1;
+        public UInt16[] player_2;
+        public UInt16[] plyaer_3;
+
+        public override void Pack(ByteArray w)
+        { 
+            w.WriteUnsignedInt16((UInt16)this.player_1.Length);
+            for (int k = 0; k < this.player_1.Length; k++)
+            { 
+                w.WriteUnsignedInt16(this.player_1[k]);
+            }
+            w.WriteUnsignedInt16((UInt16)this.player_2.Length);
+            for (int k = 0; k < this.player_2.Length; k++)
+            { 
+                w.WriteUnsignedInt16(this.player_2[k]);
+            }
+            w.WriteUnsignedInt16((UInt16)this.plyaer_3.Length);
+            for (int k = 0; k < this.plyaer_3.Length; k++)
+            { 
+                w.WriteUnsignedInt16(this.plyaer_3[k]);
+            }
+        }
+
+        public static player_cards UnPack(ByteArray reader)
+        {
+            player_cards tbl = new player_cards();
+            {
+                UInt16 narr = reader.ReadUnsignedInt16();
+                
+                tbl.player_1 = new UInt16[narr];
+                
+                for (int i = 0; i < narr; i++)
+                {
+                    tbl.player_1[i] = reader.ReadUnsignedInt16();
+                }
+            }
+            {
+                UInt16 narr = reader.ReadUnsignedInt16();
+                
+                tbl.player_2 = new UInt16[narr];
+                
+                for (int i = 0; i < narr; i++)
+                {
+                    tbl.player_2[i] = reader.ReadUnsignedInt16();
+                }
+            }
+            {
+                UInt16 narr = reader.ReadUnsignedInt16();
+                
+                tbl.plyaer_3 = new UInt16[narr];
+                
+                for (int i = 0; i < narr; i++)
+                {
+                    tbl.plyaer_3[i] = reader.ReadUnsignedInt16();
+                }
+            }
+
+            return tbl;
+        }
+    }
 }
