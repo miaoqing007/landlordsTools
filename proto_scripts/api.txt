@@ -24,3 +24,8 @@ name:licensing_card_req
 payload:null_struct
 desc:发牌请求
 
+packet_type:2004
+name:join_room_req
+payload:entity_id
+desc:进入房间
+

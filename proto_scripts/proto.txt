@@ -12,7 +12,7 @@ id integer
 
 #通用实体ID
 entity_id=
-id uint64
+id string
 ===
 
 #通用物品id或物品模板id
@@ -21,7 +21,9 @@ id uint32
 ===
 
 player_cards=
-player_1 array uint16
-player_2 array uint16
-plyaer_3 array uint16
+player_1 array string
+player_2 array string
+plyaer_3 array string
+hole_cards array string
+roomId string
 ===

@@ -12,5 +12,6 @@ namespace NetProto.Api
         user_login_req = 2001, // 登陆
         error_ack = 2002, // 错误返回
         licensing_card_req = 2003, // 发牌请求
+        join_room_req = 2004, // 进入房间
     };
 }

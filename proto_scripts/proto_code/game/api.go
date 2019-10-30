@@ -10,6 +10,7 @@ var Code = map[string]int16{
 	"user_login_req":     2001, // 登陆
 	"error_ack":          2002, // 错误返回
 	"licensing_card_req": 2003, // 发牌请求
+	"join_room_req":      2004, // 进入房间
 }
 
 var RCode = map[int16]string{
@@ -17,6 +18,7 @@ var RCode = map[int16]string{
 	2001: "user_login_req",     // 登陆
 	2002: "error_ack",          // 错误返回
 	2003: "licensing_card_req", // 发牌请求
+	2004: "join_room_req",      // 进入房间
 }
 
 var Handlers map[int16]func(*Session, *packet.Packet) [][]byte
@@ -26,5 +28,6 @@ func init() {
 		2000: P_heart_beat_req,
 		2001: P_user_login_req,
 		2003: P_licensing_card_req,
+		2004: P_join_room_req,
 	}
 }

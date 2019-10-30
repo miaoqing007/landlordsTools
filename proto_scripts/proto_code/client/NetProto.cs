@@ -65,17 +65,17 @@ namespace NetProto.Proto
 
     public class entity_id : NetBase
     { 
-        public UInt64 id;
+        public string id;
 
         public override void Pack(ByteArray w)
         { 
-            w.WriteUnsignedInt64(this.id);
+            w.WriteUTF(this.id);
         }
 
         public static entity_id UnPack(ByteArray reader)
         {
             entity_id tbl = new entity_id();
-            tbl.id = reader.ReadUnsignedInt64();
+            tbl.id = reader.ReadUTFBytes();
 
             return tbl;
         }
@@ -101,27 +101,35 @@ namespace NetProto.Proto
 
     public class player_cards : NetBase
     { 
-        public UInt16[] player_1;
-        public UInt16[] player_2;
-        public UInt16[] plyaer_3;
+        public string[] player_1;
+        public string[] player_2;
+        public string[] plyaer_3;
+        public string[] hole_cards;
+        public string roomId;
 
         public override void Pack(ByteArray w)
         { 
             w.WriteUnsignedInt16((UInt16)this.player_1.Length);
             for (int k = 0; k < this.player_1.Length; k++)
             { 
-                w.WriteUnsignedInt16(this.player_1[k]);
+                w.WriteUTF(this.player_1[k]);
             }
             w.WriteUnsignedInt16((UInt16)this.player_2.Length);
             for (int k = 0; k < this.player_2.Length; k++)
             { 
-                w.WriteUnsignedInt16(this.player_2[k]);
+                w.WriteUTF(this.player_2[k]);
             }
             w.WriteUnsignedInt16((UInt16)this.plyaer_3.Length);
             for (int k = 0; k < this.plyaer_3.Length; k++)
             { 
-                w.WriteUnsignedInt16(this.plyaer_3[k]);
+                w.WriteUTF(this.plyaer_3[k]);
             }
+            w.WriteUnsignedInt16((UInt16)this.hole_cards.Length);
+            for (int k = 0; k < this.hole_cards.Length; k++)
+            { 
+                w.WriteUTF(this.hole_cards[k]);
+            }
+            w.WriteUTF(this.roomId);
         }
 
         public static player_cards UnPack(ByteArray reader)
@@ -130,33 +138,44 @@ namespace NetProto.Proto
             {
                 UInt16 narr = reader.ReadUnsignedInt16();
                 
-                tbl.player_1 = new UInt16[narr];
+                tbl.player_1 = new string[narr];
                 
                 for (int i = 0; i < narr; i++)
                 {
-                    tbl.player_1[i] = reader.ReadUnsignedInt16();
+                    tbl.player_1[i] = reader.ReadUTFBytes();
                 }
             }
             {
                 UInt16 narr = reader.ReadUnsignedInt16();
                 
-                tbl.player_2 = new UInt16[narr];
+                tbl.player_2 = new string[narr];
                 
                 for (int i = 0; i < narr; i++)
                 {
-                    tbl.player_2[i] = reader.ReadUnsignedInt16();
+                    tbl.player_2[i] = reader.ReadUTFBytes();
                 }
             }
             {
                 UInt16 narr = reader.ReadUnsignedInt16();
                 
-                tbl.plyaer_3 = new UInt16[narr];
+                tbl.plyaer_3 = new string[narr];
                 
                 for (int i = 0; i < narr; i++)
                 {
-                    tbl.plyaer_3[i] = reader.ReadUnsignedInt16();
+                    tbl.plyaer_3[i] = reader.ReadUTFBytes();
                 }
             }
+            {
+                UInt16 narr = reader.ReadUnsignedInt16();
+                
+                tbl.hole_cards = new string[narr];
+                
+                for (int i = 0; i < narr; i++)
+                {
+                    tbl.hole_cards[i] = reader.ReadUTFBytes();
+                }
+            }
+            tbl.roomId = reader.ReadUTFBytes();
 
             return tbl;
         }
