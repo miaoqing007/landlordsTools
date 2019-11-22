@@ -74,68 +74,25 @@ func PKT_item_id(reader *packet.Packet) (tbl item_id, err error) {
 	return
 }
 
-type player_cards struct {
-	F_player_1   []string
-	F_player_2   []string
-	F_plyaer_3   []string
+type player_card struct {
 	F_hole_cards []string
 	F_roomId     string
+	F_players    []player
 }
 
-func (p player_cards) Pack(w *packet.Packet) {
-	w.WriteU16(uint16(len(p.F_player_1)))
-	for k := range p.F_player_1 {
-		w.WriteString(p.F_player_1[k])
-	}
-	w.WriteU16(uint16(len(p.F_player_2)))
-	for k := range p.F_player_2 {
-		w.WriteString(p.F_player_2[k])
-	}
-	w.WriteU16(uint16(len(p.F_plyaer_3)))
-	for k := range p.F_plyaer_3 {
-		w.WriteString(p.F_plyaer_3[k])
-	}
+func (p player_card) Pack(w *packet.Packet) {
 	w.WriteU16(uint16(len(p.F_hole_cards)))
 	for k := range p.F_hole_cards {
 		w.WriteString(p.F_hole_cards[k])
 	}
 	w.WriteString(p.F_roomId)
+	w.WriteU16(uint16(len(p.F_players)))
+	for k := range p.F_players {
+		p.F_players[k].Pack(w)
+	}
 }
 
-func PKT_player_cards(reader *packet.Packet) (tbl player_cards, err error) {
-	{
-		narr, err := reader.ReadU16()
-		checkErr(err)
-
-		for i := 0; i < int(narr); i++ {
-			v, err := reader.ReadString()
-			tbl.F_player_1 = append(tbl.F_player_1, v)
-			checkErr(err)
-		}
-	}
-
-	{
-		narr, err := reader.ReadU16()
-		checkErr(err)
-
-		for i := 0; i < int(narr); i++ {
-			v, err := reader.ReadString()
-			tbl.F_player_2 = append(tbl.F_player_2, v)
-			checkErr(err)
-		}
-	}
-
-	{
-		narr, err := reader.ReadU16()
-		checkErr(err)
-
-		for i := 0; i < int(narr); i++ {
-			v, err := reader.ReadString()
-			tbl.F_plyaer_3 = append(tbl.F_plyaer_3, v)
-			checkErr(err)
-		}
-	}
-
+func PKT_player_card(reader *packet.Packet) (tbl player_card, err error) {
 	{
 		narr, err := reader.ReadU16()
 		checkErr(err)
@@ -149,6 +106,48 @@ func PKT_player_cards(reader *packet.Packet) (tbl player_cards, err error) {
 
 	tbl.F_roomId, err = reader.ReadString()
 	checkErr(err)
+
+	{
+		narr, err := reader.ReadU16()
+		checkErr(err)
+
+		tbl.F_players = make([]player, narr)
+		for i := 0; i < int(narr); i++ {
+			tbl.F_players[i], err = PKT_player(reader)
+			checkErr(err)
+		}
+	}
+
+	return
+}
+
+type player struct {
+	F_id    string
+	F_cards []string
+}
+
+func (p player) Pack(w *packet.Packet) {
+	w.WriteString(p.F_id)
+	w.WriteU16(uint16(len(p.F_cards)))
+	for k := range p.F_cards {
+		w.WriteString(p.F_cards[k])
+	}
+}
+
+func PKT_player(reader *packet.Packet) (tbl player, err error) {
+	tbl.F_id, err = reader.ReadString()
+	checkErr(err)
+
+	{
+		narr, err := reader.ReadU16()
+		checkErr(err)
+
+		for i := 0; i < int(narr); i++ {
+			v, err := reader.ReadString()
+			tbl.F_cards = append(tbl.F_cards, v)
+			checkErr(err)
+		}
+	}
 
 	return
 }

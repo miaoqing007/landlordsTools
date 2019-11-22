@@ -29,3 +29,13 @@ name:join_room_req
 payload:entity_id
 desc:进入房间
 
+packet_type:2005
+name:user_reg_req
+payload:entity_id
+desc:新用户注册
+
+packet_type:2006
+name:user_data_req
+payload:null_struct
+desc:拉取用户信息
+

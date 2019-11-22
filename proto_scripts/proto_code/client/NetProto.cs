@@ -99,72 +99,30 @@ namespace NetProto.Proto
         }
     }
 
-    public class player_cards : NetBase
+    public class player_card : NetBase
     { 
-        public string[] player_1;
-        public string[] player_2;
-        public string[] plyaer_3;
         public string[] hole_cards;
         public string roomId;
+        public player[] players;
 
         public override void Pack(ByteArray w)
         { 
-            w.WriteUnsignedInt16((UInt16)this.player_1.Length);
-            for (int k = 0; k < this.player_1.Length; k++)
-            { 
-                w.WriteUTF(this.player_1[k]);
-            }
-            w.WriteUnsignedInt16((UInt16)this.player_2.Length);
-            for (int k = 0; k < this.player_2.Length; k++)
-            { 
-                w.WriteUTF(this.player_2[k]);
-            }
-            w.WriteUnsignedInt16((UInt16)this.plyaer_3.Length);
-            for (int k = 0; k < this.plyaer_3.Length; k++)
-            { 
-                w.WriteUTF(this.plyaer_3[k]);
-            }
             w.WriteUnsignedInt16((UInt16)this.hole_cards.Length);
             for (int k = 0; k < this.hole_cards.Length; k++)
             { 
                 w.WriteUTF(this.hole_cards[k]);
             }
             w.WriteUTF(this.roomId);
+            w.WriteUnsignedInt16((UInt16)this.players.Length);
+            for (int k = 0; k < this.players.Length; k++)
+            { 
+                this.players[k].Pack(w);
+            }
         }
 
-        public static player_cards UnPack(ByteArray reader)
+        public static player_card UnPack(ByteArray reader)
         {
-            player_cards tbl = new player_cards();
-            {
-                UInt16 narr = reader.ReadUnsignedInt16();
-                
-                tbl.player_1 = new string[narr];
-                
-                for (int i = 0; i < narr; i++)
-                {
-                    tbl.player_1[i] = reader.ReadUTFBytes();
-                }
-            }
-            {
-                UInt16 narr = reader.ReadUnsignedInt16();
-                
-                tbl.player_2 = new string[narr];
-                
-                for (int i = 0; i < narr; i++)
-                {
-                    tbl.player_2[i] = reader.ReadUTFBytes();
-                }
-            }
-            {
-                UInt16 narr = reader.ReadUnsignedInt16();
-                
-                tbl.plyaer_3 = new string[narr];
-                
-                for (int i = 0; i < narr; i++)
-                {
-                    tbl.plyaer_3[i] = reader.ReadUTFBytes();
-                }
-            }
+            player_card tbl = new player_card();
             {
                 UInt16 narr = reader.ReadUnsignedInt16();
                 
@@ -176,6 +134,48 @@ namespace NetProto.Proto
                 }
             }
             tbl.roomId = reader.ReadUTFBytes();
+            {
+                UInt16 narr = reader.ReadUnsignedInt16();
+                tbl.players = new player[narr];
+                for (int i = 0; i < narr; i++)
+                {
+                    tbl.players[i] = player.UnPack(reader);
+                }
+            }
+
+            return tbl;
+        }
+    }
+
+    public class player : NetBase
+    { 
+        public string id;
+        public string[] cards;
+
+        public override void Pack(ByteArray w)
+        { 
+            w.WriteUTF(this.id);
+            w.WriteUnsignedInt16((UInt16)this.cards.Length);
+            for (int k = 0; k < this.cards.Length; k++)
+            { 
+                w.WriteUTF(this.cards[k]);
+            }
+        }
+
+        public static player UnPack(ByteArray reader)
+        {
+            player tbl = new player();
+            tbl.id = reader.ReadUTFBytes();
+            {
+                UInt16 narr = reader.ReadUnsignedInt16();
+                
+                tbl.cards = new string[narr];
+                
+                for (int i = 0; i < narr; i++)
+                {
+                    tbl.cards[i] = reader.ReadUTFBytes();
+                }
+            }
 
             return tbl;
         }

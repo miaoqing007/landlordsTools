@@ -20,10 +20,13 @@ item_id=
 id uint32
 ===
 
-player_cards=
-player_1 array string
-player_2 array string
-plyaer_3 array string
+player_card=
 hole_cards array string
 roomId string
+players array player
+===
+
+player=
+id string
+cards array string
 ===
