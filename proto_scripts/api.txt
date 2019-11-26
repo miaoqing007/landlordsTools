@@ -39,3 +39,7 @@ name:user_data_req
 payload:null_struct
 desc:拉取用户信息
 
+packet_type:2007
+name:out_of_the_card_req
+payload:player_outof_card
+desc:出牌请求

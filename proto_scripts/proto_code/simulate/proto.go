@@ -151,3 +151,34 @@ func PKT_player(reader *packet.Packet) (tbl player, err error) {
 
 	return
 }
+
+type player_outof_card struct {
+	F_roomId string
+	F_cards  []string
+}
+
+func (p player_outof_card) Pack(w *packet.Packet) {
+	w.WriteString(p.F_roomId)
+	w.WriteU16(uint16(len(p.F_cards)))
+	for k := range p.F_cards {
+		w.WriteString(p.F_cards[k])
+	}
+}
+
+func PKT_player_outof_card(reader *packet.Packet) (tbl player_outof_card, err error) {
+	tbl.F_roomId, err = reader.ReadString()
+	checkErr(err)
+
+	{
+		narr, err := reader.ReadU16()
+		checkErr(err)
+
+		for i := 0; i < int(narr); i++ {
+			v, err := reader.ReadString()
+			tbl.F_cards = append(tbl.F_cards, v)
+			checkErr(err)
+		}
+	}
+
+	return
+}

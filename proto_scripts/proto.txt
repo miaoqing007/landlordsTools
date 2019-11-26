@@ -30,3 +30,8 @@ player=
 id string
 cards array string
 ===
+
+player_outof_card=
+roomId string
+cards array string
+===

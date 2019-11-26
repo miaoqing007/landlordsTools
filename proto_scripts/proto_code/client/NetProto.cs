@@ -180,4 +180,38 @@ namespace NetProto.Proto
             return tbl;
         }
     }
+
+    public class player_outof_card : NetBase
+    { 
+        public string roomId;
+        public string[] cards;
+
+        public override void Pack(ByteArray w)
+        { 
+            w.WriteUTF(this.roomId);
+            w.WriteUnsignedInt16((UInt16)this.cards.Length);
+            for (int k = 0; k < this.cards.Length; k++)
+            { 
+                w.WriteUTF(this.cards[k]);
+            }
+        }
+
+        public static player_outof_card UnPack(ByteArray reader)
+        {
+            player_outof_card tbl = new player_outof_card();
+            tbl.roomId = reader.ReadUTFBytes();
+            {
+                UInt16 narr = reader.ReadUnsignedInt16();
+                
+                tbl.cards = new string[narr];
+                
+                for (int i = 0; i < narr; i++)
+                {
+                    tbl.cards[i] = reader.ReadUTFBytes();
+                }
+            }
+
+            return tbl;
+        }
+    }
 }
