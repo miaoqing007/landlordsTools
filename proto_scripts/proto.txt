@@ -35,3 +35,12 @@ player_outof_card=
 roomId string
 cards array string
 ===
+
+login_info=
+account string
+password string
+===
+
+error_ack=
+msg string
+===

@@ -2,9 +2,9 @@
 // DO NOT EDIT!
 package client_proto
 
-import "app/misc/packet"
+import "landlords/misc/packet"
 import "fmt"
-import "strings"
+import "encoding/json"
 {{range .}}
 type S_{{.Name}} struct { {{range $f := .Fields}}{{with Type $f.Typ}}
 	F_{{$f.Name}} {{if $f.Array}}[]{{end}}{{.}}{{else}}
@@ -19,50 +19,14 @@ func (p S_{{.Name}}) Pack(w *packet.Packet) { {{range $f := .Fields}}{{if $f.Arr
 	}{{end}}{{end}}
 }
 
-func PKT_{{.Name}}(reader *packet.Packet) (tbl S_{{.Name}}, err error) {
-    {{- $sname := .Name}}
-    {{- range $f := .Fields}}
-	{{- $ft := $f.Typ}}
-	{{- if $f.Array}}
-	{
-		narr, err := reader.{{Read "uint16"}}()
-		checkErr(err)
-		{{- with Read $f.Typ}}
-		for i := 0; i < int(narr); i++ {
-			v, err := reader.{{.}}()
-			tbl.F_{{$f.Name}} = append(tbl.F_{{$f.Name}}, v)
-			checkErr(err)
-		}
-		{{- else}}
-		tbl.F_{{$f.Name}} = make([]S_{{$f.Typ}}, narr)
-		for i := 0; i < int(narr); i++ {
-			tbl.F_{{$f.Name}}[i], err = PKT_{{$f.Typ}}(reader)
-			checkErr(err)
-		}
-		{{- end}}
+func PKT_{{.Name}}(data []byte) (tbl S_{{.Name}}, err error) {
+	err=json.Unmarshal(data,&tbl)
+	if err!=nil{
+	return tbl,err
 	}
-	{{- else}}
-	{{- with Read $f.Typ}}
-	tbl.F_{{$f.Name}}, err = reader.{{.}}()
-	checkErr(err)
-	{{- if $f.CheckMinVal}}
-	checkMin("{{$sname}}.{{$f.Name}}", float64(tbl.F_{{$f.Name}}), {{$f.MinVal}})
-    {{- end}}
-    {{- if $f.CheckMaxVal}}
-    checkMax("{{$sname}}.{{$f.Name}}", float64(tbl.F_{{$f.Name}}), {{$f.MaxVal}})
-    {{- end}}
-	{{- if eq "string" $ft}}
-	tbl.F_{{$f.Name}} = strings.TrimSpace(tbl.F_{{$f.Name}})
-	{{- end}}
-	{{- else}}
-	tbl.F_{{$f.Name}}, err = PKT_{{$f.Typ}}(reader)
-	checkErr(err)
-	{{- end}}
-	{{- end}}
-	{{- end}}
-
 	return
 }
+
 {{end}}
 func checkErr(err error) {
 	if err != nil {

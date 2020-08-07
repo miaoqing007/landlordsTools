@@ -182,3 +182,38 @@ func PKT_player_outof_card(reader *packet.Packet) (tbl player_outof_card, err er
 
 	return
 }
+
+type login_info struct {
+	F_account  string
+	F_password string
+}
+
+func (p login_info) Pack(w *packet.Packet) {
+	w.WriteString(p.F_account)
+	w.WriteString(p.F_password)
+}
+
+func PKT_login_info(reader *packet.Packet) (tbl login_info, err error) {
+	tbl.F_account, err = reader.ReadString()
+	checkErr(err)
+
+	tbl.F_password, err = reader.ReadString()
+	checkErr(err)
+
+	return
+}
+
+type error_ack struct {
+	F_msg string
+}
+
+func (p error_ack) Pack(w *packet.Packet) {
+	w.WriteString(p.F_msg)
+}
+
+func PKT_error_ack(reader *packet.Packet) (tbl error_ack, err error) {
+	tbl.F_msg, err = reader.ReadString()
+	checkErr(err)
+
+	return
+}

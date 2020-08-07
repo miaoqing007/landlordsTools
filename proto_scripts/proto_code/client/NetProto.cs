@@ -214,4 +214,43 @@ namespace NetProto.Proto
             return tbl;
         }
     }
+
+    public class login_info : NetBase
+    { 
+        public string account;
+        public string password;
+
+        public override void Pack(ByteArray w)
+        { 
+            w.WriteUTF(this.account);
+            w.WriteUTF(this.password);
+        }
+
+        public static login_info UnPack(ByteArray reader)
+        {
+            login_info tbl = new login_info();
+            tbl.account = reader.ReadUTFBytes();
+            tbl.password = reader.ReadUTFBytes();
+
+            return tbl;
+        }
+    }
+
+    public class error_ack : NetBase
+    { 
+        public string msg;
+
+        public override void Pack(ByteArray w)
+        { 
+            w.WriteUTF(this.msg);
+        }
+
+        public static error_ack UnPack(ByteArray reader)
+        {
+            error_ack tbl = new error_ack();
+            tbl.msg = reader.ReadUTFBytes();
+
+            return tbl;
+        }
+    }
 }
