@@ -8,7 +8,7 @@ import "encoding/json"
 {{range .}}
 type S_{{.Name}} struct { {{range $f := .Fields}}{{with Type $f.Typ}} 
 	F_{{$f.Name}} {{if $f.Array}}[] {{end}} {{.}} {{else}}
-	F_{{$f.Name}} {{if $f.Array}}[]{{end}}S_{{$f.Typ }}{{end}}  `json:{{$f.Name}}` {{end}}
+	F_{{$f.Name}} {{if $f.Array}}[]{{end}}S_{{$f.Typ }}{{end}} `json:"{{$f.Name}}"` {{end}}
 }
 
 func (p S_{{.Name}}) Pack(w *packet.Packet) { {{range $f := .Fields}}{{if $f.Array}}
