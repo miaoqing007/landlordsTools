@@ -5,8 +5,8 @@ package client_proto
 import "app/misc/packet"
 {{range .}}
 type S_{{.Name}} struct { {{range $f := .Fields}}{{with Type $f.Typ}}
-	F_{{$f.Name}} {{if $f.Array}}[]{{end}}{{.}}{{else}}
-	F_{{$f.Name}} {{if $f.Array}}[]{{end}}S_{{$f.Typ}}{{end}}{{end}}
+	FC_{{$f.Name}} {`json:{{$f.Name}}`} {{if $f.Array}}[]{{end}}{{.}}{{else}}
+	FC_{{$f.Name}} {`json:{{$f.Name}}`} {{if $f.Array}}[]{{end}}S_{{$f.Typ}}{{end}}{{end}}
 }
 
 func (p S_{{.Name}}) Pack(w *packet.Packet) { {{range $f := .Fields}}{{if $f.Array}}
