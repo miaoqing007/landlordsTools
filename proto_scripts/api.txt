@@ -20,9 +20,9 @@ payload:error_info
 desc:错误返回
 
 packet_type:2003
-name:licensing_card_req
+name:start_game_req
 payload:null_struct
-desc:发牌请求
+desc:开始游戏
 
 packet_type:2004
 name:join_room_req

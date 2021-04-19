@@ -218,6 +218,26 @@ func PKT_error_ack(reader *packet.Packet) (tbl S_error_ack, err error) {
 	return
 }
 
+type S_user_info struct {
+	F_name string
+	F_uid  string
+}
+
+func (p S_user_info) Pack(w *packet.Packet) {
+	w.WriteString(p.F_name)
+	w.WriteString(p.F_uid)
+}
+
+func PKT_user_info(reader *packet.Packet) (tbl S_user_info, err error) {
+	tbl.F_name, err = reader.ReadString()
+	checkErr(err)
+
+	tbl.F_uid, err = reader.ReadString()
+	checkErr(err)
+
+	return
+}
+
 func checkErr(err error) {
 	if err != nil {
 		panic("error occured in protocol module")

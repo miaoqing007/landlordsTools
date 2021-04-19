@@ -253,4 +253,25 @@ namespace NetProto.Proto
             return tbl;
         }
     }
+
+    public class user_info : NetBase
+    { 
+        public string name;
+        public string uid;
+
+        public override void Pack(ByteArray w)
+        { 
+            w.WriteUTF(this.name);
+            w.WriteUTF(this.uid);
+        }
+
+        public static user_info UnPack(ByteArray reader)
+        {
+            user_info tbl = new user_info();
+            tbl.name = reader.ReadUTFBytes();
+            tbl.uid = reader.ReadUTFBytes();
+
+            return tbl;
+        }
+    }
 }

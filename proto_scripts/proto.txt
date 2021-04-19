@@ -44,3 +44,8 @@ password string
 error_ack=
 msg string
 ===
+
+user_info=
+name string
+uid string
+===

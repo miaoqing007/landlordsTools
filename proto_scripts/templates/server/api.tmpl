@@ -2,8 +2,7 @@
 // DO NOT EDIT!
 package client_handler
 
-import "app/misc/packet"
-import . "app/session"
+import ."landlords/session"
 
 var Code = map[string]int16{ {{range .}}
 	"{{.Name}}": {{.PacketType}}, // {{.Desc}}{{end}}
@@ -13,10 +12,10 @@ var RCode = map[int16]string{ {{range .}}
 	{{.PacketType}}: "{{.Name}}", // {{.Desc}}{{end}}
 }
 
-var Handlers map[int16]func(*Session, *packet.Packet) [][]byte
+var Handlers map[int16]func(*Session, []byte) (int16,interface{})
 
 func init() {
-	Handlers = map[int16]func(*Session, *packet.Packet) [][]byte{ {{range .}}{{if isReq .}}
+	Handlers = map[int16]func(*Session, []byte) (int16,interface{}) { {{range .}}{{if isReq .}}
 		{{.PacketType}}: P_{{.Name}},{{else}}{{end}}{{end}}
 	}
 }
