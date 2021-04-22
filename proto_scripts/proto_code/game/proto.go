@@ -204,6 +204,32 @@ func PKT_user_info(data []byte) (tbl S_user_info, err error) {
 	return
 }
 
+type S_out_of_cards struct {
+	F_id         string   `json:"id"`
+	F_cards      []string `json:"cards"`
+	F_outOfCards []string `json:"outOfCards"`
+}
+
+func (p S_out_of_cards) Pack(w *packet.Packet) {
+	w.WriteString(p.F_id)
+	w.WriteU16(uint16(len(p.F_cards)))
+	for k := range p.F_cards {
+		w.WriteString(p.F_cards[k])
+	}
+	w.WriteU16(uint16(len(p.F_outOfCards)))
+	for k := range p.F_outOfCards {
+		w.WriteString(p.F_outOfCards[k])
+	}
+}
+
+func PKT_out_of_cards(data []byte) (tbl S_out_of_cards, err error) {
+	err = json.Unmarshal(data, &tbl)
+	if err != nil {
+		return tbl, err
+	}
+	return
+}
+
 func checkErr(err error) {
 	if err != nil {
 		panic("error occured in protocol module")

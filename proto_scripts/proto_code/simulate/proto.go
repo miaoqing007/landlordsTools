@@ -237,3 +237,50 @@ func PKT_user_info(reader *packet.Packet) (tbl user_info, err error) {
 
 	return
 }
+
+type out_of_cards struct {
+	F_id         string
+	F_cards      []string
+	F_outOfCards []string
+}
+
+func (p out_of_cards) Pack(w *packet.Packet) {
+	w.WriteString(p.F_id)
+	w.WriteU16(uint16(len(p.F_cards)))
+	for k := range p.F_cards {
+		w.WriteString(p.F_cards[k])
+	}
+	w.WriteU16(uint16(len(p.F_outOfCards)))
+	for k := range p.F_outOfCards {
+		w.WriteString(p.F_outOfCards[k])
+	}
+}
+
+func PKT_out_of_cards(reader *packet.Packet) (tbl out_of_cards, err error) {
+	tbl.F_id, err = reader.ReadString()
+	checkErr(err)
+
+	{
+		narr, err := reader.ReadU16()
+		checkErr(err)
+
+		for i := 0; i < int(narr); i++ {
+			v, err := reader.ReadString()
+			tbl.F_cards = append(tbl.F_cards, v)
+			checkErr(err)
+		}
+	}
+
+	{
+		narr, err := reader.ReadU16()
+		checkErr(err)
+
+		for i := 0; i < int(narr); i++ {
+			v, err := reader.ReadString()
+			tbl.F_outOfCards = append(tbl.F_outOfCards, v)
+			checkErr(err)
+		}
+	}
+
+	return
+}

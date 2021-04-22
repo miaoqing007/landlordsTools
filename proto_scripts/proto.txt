@@ -49,3 +49,9 @@ user_info=
 name string
 uid string
 ===
+
+out_of_cards=
+id string
+cards array string
+outOfCards array string
+===

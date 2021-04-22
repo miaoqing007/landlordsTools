@@ -274,4 +274,54 @@ namespace NetProto.Proto
             return tbl;
         }
     }
+
+    public class out_of_cards : NetBase
+    { 
+        public string id;
+        public string[] cards;
+        public string[] outOfCards;
+
+        public override void Pack(ByteArray w)
+        { 
+            w.WriteUTF(this.id);
+            w.WriteUnsignedInt16((UInt16)this.cards.Length);
+            for (int k = 0; k < this.cards.Length; k++)
+            { 
+                w.WriteUTF(this.cards[k]);
+            }
+            w.WriteUnsignedInt16((UInt16)this.outOfCards.Length);
+            for (int k = 0; k < this.outOfCards.Length; k++)
+            { 
+                w.WriteUTF(this.outOfCards[k]);
+            }
+        }
+
+        public static out_of_cards UnPack(ByteArray reader)
+        {
+            out_of_cards tbl = new out_of_cards();
+            tbl.id = reader.ReadUTFBytes();
+            {
+                UInt16 narr = reader.ReadUnsignedInt16();
+                
+                tbl.cards = new string[narr];
+                
+                for (int i = 0; i < narr; i++)
+                {
+                    tbl.cards[i] = reader.ReadUTFBytes();
+                }
+            }
+            {
+                UInt16 narr = reader.ReadUnsignedInt16();
+                
+                tbl.outOfCards = new string[narr];
+                
+                for (int i = 0; i < narr; i++)
+                {
+                    tbl.outOfCards[i] = reader.ReadUTFBytes();
+                }
+            }
+
+            return tbl;
+        }
+    }
 }

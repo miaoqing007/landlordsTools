@@ -16,5 +16,9 @@ namespace NetProto.Api
         user_reg_req = 2005, // 新用户注册
         user_data_req = 2006, // 拉取用户信息
         out_of_the_card_req = 2007, // 出牌请求
+        cancel_match_req = 2008, // 取消匹配
+        cancel_match_success_ack = 2009, // 取消匹配成功
+        out_of_the_card_failed_ack = 2010, // 出牌失败
+        out_of_the_card_success_ack = 2011, // 出牌成功
     };
 }
