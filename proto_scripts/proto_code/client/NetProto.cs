@@ -103,6 +103,7 @@ namespace NetProto.Proto
     { 
         public string[] hole_cards;
         public string roomId;
+        public string[] playerIds;
         public player[] players;
 
         public override void Pack(ByteArray w)
@@ -113,6 +114,11 @@ namespace NetProto.Proto
                 w.WriteUTF(this.hole_cards[k]);
             }
             w.WriteUTF(this.roomId);
+            w.WriteUnsignedInt16((UInt16)this.playerIds.Length);
+            for (int k = 0; k < this.playerIds.Length; k++)
+            { 
+                w.WriteUTF(this.playerIds[k]);
+            }
             w.WriteUnsignedInt16((UInt16)this.players.Length);
             for (int k = 0; k < this.players.Length; k++)
             { 
@@ -136,6 +142,16 @@ namespace NetProto.Proto
             tbl.roomId = reader.ReadUTFBytes();
             {
                 UInt16 narr = reader.ReadUnsignedInt16();
+                
+                tbl.playerIds = new string[narr];
+                
+                for (int i = 0; i < narr; i++)
+                {
+                    tbl.playerIds[i] = reader.ReadUTFBytes();
+                }
+            }
+            {
+                UInt16 narr = reader.ReadUnsignedInt16();
                 tbl.players = new player[narr];
                 for (int i = 0; i < narr; i++)
                 {
@@ -150,11 +166,13 @@ namespace NetProto.Proto
     public class player : NetBase
     { 
         public string id;
+        public string name;
         public string[] cards;
 
         public override void Pack(ByteArray w)
         { 
             w.WriteUTF(this.id);
+            w.WriteUTF(this.name);
             w.WriteUnsignedInt16((UInt16)this.cards.Length);
             for (int k = 0; k < this.cards.Length; k++)
             { 
@@ -166,6 +184,7 @@ namespace NetProto.Proto
         {
             player tbl = new player();
             tbl.id = reader.ReadUTFBytes();
+            tbl.name = reader.ReadUTFBytes();
             {
                 UInt16 narr = reader.ReadUnsignedInt16();
                 
@@ -320,6 +339,24 @@ namespace NetProto.Proto
                     tbl.outOfCards[i] = reader.ReadUTFBytes();
                 }
             }
+
+            return tbl;
+        }
+    }
+
+    public class msg_string : NetBase
+    { 
+        public string msg;
+
+        public override void Pack(ByteArray w)
+        { 
+            w.WriteUTF(this.msg);
+        }
+
+        public static msg_string UnPack(ByteArray reader)
+        {
+            msg_string tbl = new msg_string();
+            tbl.msg = reader.ReadUTFBytes();
 
             return tbl;
         }

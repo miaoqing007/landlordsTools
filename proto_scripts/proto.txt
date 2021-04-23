@@ -23,11 +23,13 @@ id uint32
 player_card=
 hole_cards array string
 roomId string
+playerIds array string
 players array player
 ===
 
 player=
 id string
+name string
 cards array string
 ===
 
@@ -54,4 +56,8 @@ out_of_cards=
 id string
 cards array string
 outOfCards array string
+===
+
+msg_string=
+msg string
 ===

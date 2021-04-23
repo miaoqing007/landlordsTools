@@ -77,6 +77,7 @@ func PKT_item_id(reader *packet.Packet) (tbl item_id, err error) {
 type player_card struct {
 	F_hole_cards []string
 	F_roomId     string
+	F_playerIds  []string
 	F_players    []player
 }
 
@@ -86,6 +87,10 @@ func (p player_card) Pack(w *packet.Packet) {
 		w.WriteString(p.F_hole_cards[k])
 	}
 	w.WriteString(p.F_roomId)
+	w.WriteU16(uint16(len(p.F_playerIds)))
+	for k := range p.F_playerIds {
+		w.WriteString(p.F_playerIds[k])
+	}
 	w.WriteU16(uint16(len(p.F_players)))
 	for k := range p.F_players {
 		p.F_players[k].Pack(w)
@@ -111,6 +116,17 @@ func PKT_player_card(reader *packet.Packet) (tbl player_card, err error) {
 		narr, err := reader.ReadU16()
 		checkErr(err)
 
+		for i := 0; i < int(narr); i++ {
+			v, err := reader.ReadString()
+			tbl.F_playerIds = append(tbl.F_playerIds, v)
+			checkErr(err)
+		}
+	}
+
+	{
+		narr, err := reader.ReadU16()
+		checkErr(err)
+
 		tbl.F_players = make([]player, narr)
 		for i := 0; i < int(narr); i++ {
 			tbl.F_players[i], err = PKT_player(reader)
@@ -123,11 +139,13 @@ func PKT_player_card(reader *packet.Packet) (tbl player_card, err error) {
 
 type player struct {
 	F_id    string
+	F_name  string
 	F_cards []string
 }
 
 func (p player) Pack(w *packet.Packet) {
 	w.WriteString(p.F_id)
+	w.WriteString(p.F_name)
 	w.WriteU16(uint16(len(p.F_cards)))
 	for k := range p.F_cards {
 		w.WriteString(p.F_cards[k])
@@ -136,6 +154,9 @@ func (p player) Pack(w *packet.Packet) {
 
 func PKT_player(reader *packet.Packet) (tbl player, err error) {
 	tbl.F_id, err = reader.ReadString()
+	checkErr(err)
+
+	tbl.F_name, err = reader.ReadString()
 	checkErr(err)
 
 	{
@@ -281,6 +302,21 @@ func PKT_out_of_cards(reader *packet.Packet) (tbl out_of_cards, err error) {
 			checkErr(err)
 		}
 	}
+
+	return
+}
+
+type msg_string struct {
+	F_msg string
+}
+
+func (p msg_string) Pack(w *packet.Packet) {
+	w.WriteString(p.F_msg)
+}
+
+func PKT_msg_string(reader *packet.Packet) (tbl msg_string, err error) {
+	tbl.F_msg, err = reader.ReadString()
+	checkErr(err)
 
 	return
 }

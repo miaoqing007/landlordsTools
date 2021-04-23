@@ -20,5 +20,9 @@ namespace NetProto.Api
         cancel_match_success_ack = 2009, // 取消匹配成功
         out_of_the_card_failed_ack = 2010, // 出牌失败
         out_of_the_card_success_ack = 2011, // 出牌成功
+        login_failed_ack = 2012, // 登陆失败
+        register_name_req = 2013, // 注册名字请求
+        register_name_ack = 2014, // 注册名字回复
+        register_name_success_ack = 2015, // 注册名字成功
     };
 }
