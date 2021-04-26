@@ -321,6 +321,21 @@ func PKT_msg_string(reader *packet.Packet) (tbl S_msg_string, err error) {
 	return
 }
 
+type S_game_over struct {
+	F_winId string
+}
+
+func (p S_game_over) Pack(w *packet.Packet) {
+	w.WriteString(p.F_winId)
+}
+
+func PKT_game_over(reader *packet.Packet) (tbl S_game_over, err error) {
+	tbl.F_winId, err = reader.ReadString()
+	checkErr(err)
+
+	return
+}
+
 func checkErr(err error) {
 	if err != nil {
 		panic("error occured in protocol module")

@@ -22,6 +22,8 @@ var Code = map[string]int16{
 	"register_name_req":           2013, // 注册名字请求
 	"register_name_ack":           2014, // 注册名字回复
 	"register_name_success_ack":   2015, // 注册名字成功
+	"give_up_card_req":            2016, // 放弃出牌
+	"game_over_ack":               2017, // 游戏结束
 }
 
 var RCode = map[int16]string{
@@ -41,6 +43,8 @@ var RCode = map[int16]string{
 	2013: "register_name_req",           // 注册名字请求
 	2014: "register_name_ack",           // 注册名字回复
 	2015: "register_name_success_ack",   // 注册名字成功
+	2016: "give_up_card_req",            // 放弃出牌
+	2017: "game_over_ack",               // 游戏结束
 }
 
 var Handlers map[int16]func(*Session, *packet.Packet) []byte

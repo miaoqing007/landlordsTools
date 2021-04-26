@@ -24,5 +24,7 @@ namespace NetProto.Api
         register_name_req = 2013, // 注册名字请求
         register_name_ack = 2014, // 注册名字回复
         register_name_success_ack = 2015, // 注册名字成功
+        give_up_card_req = 2016, // 放弃出牌
+        game_over_ack = 2017, // 游戏结束
     };
 }

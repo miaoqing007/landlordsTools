@@ -320,3 +320,18 @@ func PKT_msg_string(reader *packet.Packet) (tbl msg_string, err error) {
 
 	return
 }
+
+type game_over struct {
+	F_winId string
+}
+
+func (p game_over) Pack(w *packet.Packet) {
+	w.WriteString(p.F_winId)
+}
+
+func PKT_game_over(reader *packet.Packet) (tbl game_over, err error) {
+	tbl.F_winId, err = reader.ReadString()
+	checkErr(err)
+
+	return
+}

@@ -83,3 +83,13 @@ packet_type:2015
 name:register_name_success_ack
 payload:null_struct
 desc:注册名字成功
+
+packet_type:2016
+name:give_up_card_req
+payload:null_struct
+desc:放弃出牌
+
+packet_type:2017
+name:game_over_ack
+payload:game_over
+desc:游戏结束

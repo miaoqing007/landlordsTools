@@ -361,4 +361,22 @@ namespace NetProto.Proto
             return tbl;
         }
     }
+
+    public class game_over : NetBase
+    { 
+        public string winId;
+
+        public override void Pack(ByteArray w)
+        { 
+            w.WriteUTF(this.winId);
+        }
+
+        public static game_over UnPack(ByteArray reader)
+        {
+            game_over tbl = new game_over();
+            tbl.winId = reader.ReadUTFBytes();
+
+            return tbl;
+        }
+    }
 }

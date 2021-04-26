@@ -61,3 +61,7 @@ outOfCards array string
 msg_string=
 msg string
 ===
+
+game_over=
+winId string
+===
