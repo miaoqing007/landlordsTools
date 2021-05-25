@@ -299,6 +299,8 @@ namespace NetProto.Proto
         public string id;
         public string[] cards;
         public string[] outOfCards;
+        public string randomNum;
+        public Int32 ty;
 
         public override void Pack(ByteArray w)
         { 
@@ -313,6 +315,8 @@ namespace NetProto.Proto
             { 
                 w.WriteUTF(this.outOfCards[k]);
             }
+            w.WriteUTF(this.randomNum);
+            w.WriteInt32(this.ty);
         }
 
         public static out_of_cards UnPack(ByteArray reader)
@@ -339,6 +343,8 @@ namespace NetProto.Proto
                     tbl.outOfCards[i] = reader.ReadUTFBytes();
                 }
             }
+            tbl.randomNum = reader.ReadUTFBytes();
+            tbl.ty = reader.ReadInt32();
 
             return tbl;
         }
@@ -364,17 +370,84 @@ namespace NetProto.Proto
 
     public class game_over : NetBase
     { 
-        public string winId;
+        public string[] winId;
 
         public override void Pack(ByteArray w)
         { 
-            w.WriteUTF(this.winId);
+            w.WriteUnsignedInt16((UInt16)this.winId.Length);
+            for (int k = 0; k < this.winId.Length; k++)
+            { 
+                w.WriteUTF(this.winId[k]);
+            }
         }
 
         public static game_over UnPack(ByteArray reader)
         {
             game_over tbl = new game_over();
-            tbl.winId = reader.ReadUTFBytes();
+            {
+                UInt16 narr = reader.ReadUnsignedInt16();
+                
+                tbl.winId = new string[narr];
+                
+                for (int i = 0; i < narr; i++)
+                {
+                    tbl.winId[i] = reader.ReadUTFBytes();
+                }
+            }
+
+            return tbl;
+        }
+    }
+
+    public class grab_landowner : NetBase
+    { 
+        public string roomId;
+        public bool ifGrab;
+        public string uid;
+        public bool ifhavelandowner;
+        public bool ifcall;
+
+        public override void Pack(ByteArray w)
+        { 
+            w.WriteUTF(this.roomId);
+            w.WriteBoolean(this.ifGrab);
+            w.WriteUTF(this.uid);
+            w.WriteBoolean(this.ifhavelandowner);
+            w.WriteBoolean(this.ifcall);
+        }
+
+        public static grab_landowner UnPack(ByteArray reader)
+        {
+            grab_landowner tbl = new grab_landowner();
+            tbl.roomId = reader.ReadUTFBytes();
+            tbl.ifGrab = reader.ReadBoolean();
+            tbl.uid = reader.ReadUTFBytes();
+            tbl.ifhavelandowner = reader.ReadBoolean();
+            tbl.ifcall = reader.ReadBoolean();
+
+            return tbl;
+        }
+    }
+
+    public class chat_msg : NetBase
+    { 
+        public string name;
+        public string timeStr;
+        public string msg;
+
+        public override void Pack(ByteArray w)
+        { 
+            w.WriteUTF(this.name);
+            w.WriteUTF(this.timeStr);
+            w.WriteUTF(this.msg);
+        }
+
+        public static chat_msg UnPack(ByteArray reader)
+        {
+            chat_msg tbl = new chat_msg();
+            tbl.name = reader.ReadUTFBytes();
+            tbl.timeStr = reader.ReadUTFBytes();
+            tbl.msg = reader.ReadUTFBytes();
 
             return tbl;
         }

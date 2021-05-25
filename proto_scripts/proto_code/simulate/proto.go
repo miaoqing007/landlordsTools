@@ -263,6 +263,8 @@ type out_of_cards struct {
 	F_id         string
 	F_cards      []string
 	F_outOfCards []string
+	F_randomNum  string
+	F_ty         int32
 }
 
 func (p out_of_cards) Pack(w *packet.Packet) {
@@ -275,6 +277,8 @@ func (p out_of_cards) Pack(w *packet.Packet) {
 	for k := range p.F_outOfCards {
 		w.WriteString(p.F_outOfCards[k])
 	}
+	w.WriteString(p.F_randomNum)
+	w.WriteS32(p.F_ty)
 }
 
 func PKT_out_of_cards(reader *packet.Packet) (tbl out_of_cards, err error) {
@@ -303,6 +307,12 @@ func PKT_out_of_cards(reader *packet.Packet) (tbl out_of_cards, err error) {
 		}
 	}
 
+	tbl.F_randomNum, err = reader.ReadString()
+	checkErr(err)
+
+	tbl.F_ty, err = reader.ReadS32()
+	checkErr(err)
+
 	return
 }
 
@@ -322,15 +332,86 @@ func PKT_msg_string(reader *packet.Packet) (tbl msg_string, err error) {
 }
 
 type game_over struct {
-	F_winId string
+	F_winId []string
 }
 
 func (p game_over) Pack(w *packet.Packet) {
-	w.WriteString(p.F_winId)
+	w.WriteU16(uint16(len(p.F_winId)))
+	for k := range p.F_winId {
+		w.WriteString(p.F_winId[k])
+	}
 }
 
 func PKT_game_over(reader *packet.Packet) (tbl game_over, err error) {
-	tbl.F_winId, err = reader.ReadString()
+	{
+		narr, err := reader.ReadU16()
+		checkErr(err)
+
+		for i := 0; i < int(narr); i++ {
+			v, err := reader.ReadString()
+			tbl.F_winId = append(tbl.F_winId, v)
+			checkErr(err)
+		}
+	}
+
+	return
+}
+
+type grab_landowner struct {
+	F_roomId          string
+	F_ifGrab          bool
+	F_uid             string
+	F_ifhavelandowner bool
+	F_ifcall          bool
+}
+
+func (p grab_landowner) Pack(w *packet.Packet) {
+	w.WriteString(p.F_roomId)
+	w.WriteBool(p.F_ifGrab)
+	w.WriteString(p.F_uid)
+	w.WriteBool(p.F_ifhavelandowner)
+	w.WriteBool(p.F_ifcall)
+}
+
+func PKT_grab_landowner(reader *packet.Packet) (tbl grab_landowner, err error) {
+	tbl.F_roomId, err = reader.ReadString()
+	checkErr(err)
+
+	tbl.F_ifGrab, err = reader.ReadBool()
+	checkErr(err)
+
+	tbl.F_uid, err = reader.ReadString()
+	checkErr(err)
+
+	tbl.F_ifhavelandowner, err = reader.ReadBool()
+	checkErr(err)
+
+	tbl.F_ifcall, err = reader.ReadBool()
+	checkErr(err)
+
+	return
+}
+
+type chat_msg struct {
+	F_name    string
+	F_timeStr string
+	F_msg     string
+}
+
+func (p chat_msg) Pack(w *packet.Packet) {
+	w.WriteString(p.F_name)
+	w.WriteString(p.F_timeStr)
+	w.WriteString(p.F_msg)
+}
+
+func PKT_chat_msg(reader *packet.Packet) (tbl chat_msg, err error) {
+	tbl.F_name, err = reader.ReadString()
+	checkErr(err)
+
+	tbl.F_timeStr, err = reader.ReadString()
+	checkErr(err)
+
+	tbl.F_msg, err = reader.ReadString()
 	checkErr(err)
 
 	return

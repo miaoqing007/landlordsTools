@@ -56,6 +56,8 @@ out_of_cards=
 id string
 cards array string
 outOfCards array string
+randomNum string
+ty integer
 ===
 
 msg_string=
@@ -63,5 +65,19 @@ msg string
 ===
 
 game_over=
-winId string
+winId array string
+===
+
+grab_landowner=
+roomId string
+ifGrab bool
+uid string
+ifhavelandowner bool
+ifcall bool 
+===
+
+chat_msg=
+name string
+timeStr string
+msg string
 ===

@@ -215,6 +215,8 @@ type S_out_of_cards struct {
 	F_id         string   `json:"id"`
 	F_cards      []string `json:"cards"`
 	F_outOfCards []string `json:"outOfCards"`
+	F_randomNum  string   `json:"randomNum"`
+	F_ty         int32    `json:"ty"`
 }
 
 func (p S_out_of_cards) Pack(w *packet.Packet) {
@@ -227,6 +229,8 @@ func (p S_out_of_cards) Pack(w *packet.Packet) {
 	for k := range p.F_outOfCards {
 		w.WriteString(p.F_outOfCards[k])
 	}
+	w.WriteString(p.F_randomNum)
+	w.WriteS32(p.F_ty)
 }
 
 func PKT_out_of_cards(data []byte) (tbl S_out_of_cards, err error) {
@@ -254,14 +258,61 @@ func PKT_msg_string(data []byte) (tbl S_msg_string, err error) {
 }
 
 type S_game_over struct {
-	F_winId string `json:"winId"`
+	F_winId []string `json:"winId"`
 }
 
 func (p S_game_over) Pack(w *packet.Packet) {
-	w.WriteString(p.F_winId)
+	w.WriteU16(uint16(len(p.F_winId)))
+	for k := range p.F_winId {
+		w.WriteString(p.F_winId[k])
+	}
 }
 
 func PKT_game_over(data []byte) (tbl S_game_over, err error) {
+	err = json.Unmarshal(data, &tbl)
+	if err != nil {
+		return tbl, err
+	}
+	return
+}
+
+type S_grab_landowner struct {
+	F_roomId          string `json:"roomId"`
+	F_ifGrab          bool   `json:"ifGrab"`
+	F_uid             string `json:"uid"`
+	F_ifhavelandowner bool   `json:"ifhavelandowner"`
+	F_ifcall          bool   `json:"ifcall"`
+}
+
+func (p S_grab_landowner) Pack(w *packet.Packet) {
+	w.WriteString(p.F_roomId)
+	w.WriteBool(p.F_ifGrab)
+	w.WriteString(p.F_uid)
+	w.WriteBool(p.F_ifhavelandowner)
+	w.WriteBool(p.F_ifcall)
+}
+
+func PKT_grab_landowner(data []byte) (tbl S_grab_landowner, err error) {
+	err = json.Unmarshal(data, &tbl)
+	if err != nil {
+		return tbl, err
+	}
+	return
+}
+
+type S_chat_msg struct {
+	F_name    string `json:"name"`
+	F_timeStr string `json:"timeStr"`
+	F_msg     string `json:"msg"`
+}
+
+func (p S_chat_msg) Pack(w *packet.Packet) {
+	w.WriteString(p.F_name)
+	w.WriteString(p.F_timeStr)
+	w.WriteString(p.F_msg)
+}
+
+func PKT_chat_msg(data []byte) (tbl S_chat_msg, err error) {
 	err = json.Unmarshal(data, &tbl)
 	if err != nil {
 		return tbl, err

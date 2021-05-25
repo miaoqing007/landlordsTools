@@ -26,5 +26,10 @@ namespace NetProto.Api
         register_name_success_ack = 2015, // 注册名字成功
         give_up_card_req = 2016, // 放弃出牌
         game_over_ack = 2017, // 游戏结束
+        Grab_The_Landlord_req = 2018, // 抢地主
+        Grab_The_Landlord_ack = 2019, // 抢地主结果
+        reset_Cards_ack = 2020, // 重新发牌
+        send_chat_msg_req = 2021, // 发送聊天信息
+        receive_chat_msg_ack = 2022, // 收到聊天信息 
     };
 }
